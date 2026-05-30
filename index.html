@@ -147,6 +147,195 @@ section{padding:64px 0;border-top:1px solid rgba(222,211,194,.72);background:rad
     }
 
 
+  
+    /* 手機版營收統計壓縮 */
+    .revenue-card {
+      padding: 14px;
+      border-radius: 18px;
+    }
+
+    .revenue-card h3 {
+      font-size: 21px;
+      margin-bottom: 8px;
+    }
+
+    .revenue-row {
+      grid-template-columns: 54px 1fr;
+      grid-template-areas:
+        "date name"
+        "amount amount";
+      gap: 4px 8px;
+      padding: 10px;
+      font-size: 14px;
+    }
+
+    .revenue-date {
+      grid-area: date;
+      font-size: 15px;
+    }
+
+    .revenue-name {
+      grid-area: name;
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .revenue-amount {
+      grid-area: amount;
+      justify-self: end;
+      font-size: 24px;
+      line-height: 1.15;
+    }
+
+    .revenue-total {
+      font-size: 46px;
+      text-align: right;
+      margin-top: 10px;
+    }
+
+    .revenue-formula {
+      font-size: 15px;
+      color: var(--text);
+      background: rgba(255,253,248,.78);
+      border: 1px solid rgba(222,211,194,.82);
+      border-radius: 12px;
+      padding: 8px 10px;
+      margin-top: 8px;
+    }
+
+    .revenue-table-wrap {
+      overflow-x: visible;
+      border: 0;
+      background: transparent;
+    }
+
+    .revenue-table {
+      min-width: 0;
+      width: 100%;
+      display: block;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 14px;
+    }
+
+    .revenue-table thead {
+      display: none;
+    }
+
+    .revenue-table tbody {
+      display: grid;
+      gap: 8px;
+    }
+
+    .revenue-table tr {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .revenue-table th {
+      display: none;
+    }
+
+    .revenue-table td {
+      display: block;
+      border: 1px solid rgba(222,211,194,.9);
+      border-radius: 14px;
+      background: rgba(255,253,248,.78);
+      padding: 10px 6px;
+      text-align: center;
+      white-space: normal;
+      min-height: 62px;
+    }
+
+    .revenue-table td::before {
+      content: attr(data-month);
+      display: block;
+      color: var(--brown);
+      font-size: 12px;
+      font-weight: 900;
+      margin-bottom: 3px;
+    }
+
+    #revenueYearTotals td {
+      color: var(--sage-dark);
+      font-size: 22px;
+      font-weight: 1000;
+      line-height: 1.15;
+    }
+
+    #revenueYearGrowth td {
+      font-size: 15px;
+      font-weight: 1000;
+      min-height: 48px;
+    }
+
+    #revenueYearGrowth td::before {
+      content: attr(data-month) "成長";
+    }
+
+    @media (min-width: 769px) {
+      .revenue-row {
+        grid-template-columns: 74px 1fr auto;
+        grid-template-areas: "date name amount";
+      }
+
+      .revenue-amount {
+        font-size: 24px;
+      }
+
+      .revenue-table-wrap {
+        overflow-x: auto;
+        border-radius: 16px;
+        border: 1px solid rgba(222,211,194,.9);
+        background: rgba(255,253,248,.74);
+      }
+
+      .revenue-table {
+        min-width: 920px;
+        width: 100%;
+        display: table;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+
+      .revenue-table thead {
+        display: table-header-group;
+      }
+
+      .revenue-table tbody {
+        display: table-row-group;
+      }
+
+      .revenue-table tr {
+        display: table-row;
+      }
+
+      .revenue-table th {
+        display: table-cell;
+      }
+
+      .revenue-table td {
+        display: table-cell;
+        border-radius: 0;
+        min-height: auto;
+        white-space: nowrap;
+      }
+
+      .revenue-table td::before {
+        display: none;
+      }
+
+      #revenueYearTotals td {
+        font-size: 18px;
+      }
+
+      #revenueYearGrowth td {
+        font-size: 13px;
+      }
+    }
+
+
   </style>
 </head>
 <body>
@@ -331,12 +520,14 @@ function renderRevenueStats(year,month){
   yearTotals.innerHTML="<th>金額</th>";
   yearGrowth.innerHTML="<th>成長比</th>";
   let previousNonZero=null;
-  monthlyTotals.forEach(total=>{
+  monthlyTotals.forEach((total,index)=>{
     const td=document.createElement("td");
+    td.setAttribute("data-month", `${index+1}月`);
     td.textContent=formatMoney(total);
     yearTotals.appendChild(td);
 
     const gtd=document.createElement("td");
+    gtd.setAttribute("data-month", `${index+1}月`);
     if(previousNonZero===null||previousNonZero===0){
       gtd.textContent="--";
       gtd.className="growth-flat";
